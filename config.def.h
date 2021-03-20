@@ -122,8 +122,11 @@ static Key keys[] = {
         { 0,                            XF86XK_AudioRaiseVolume,  spawn,          {.v = volup } },
         { 0,                            XF86XK_AudioLowerVolume,  spawn,          {.v = voldown } },
         { 0,                            XF86XK_AudioPlay,         spawn,          SHCMD("playerctl play-pause") },
+        { 0,                            XF86XK_AudioPrev,         spawn,          SHCMD("playerctl previous") },
+        { 0,                            XF86XK_AudioNext,         spawn,          SHCMD("playerctl next") },
         { 0,                            XF86XK_AudioStop,         spawn,          SHCMD("playerctl stop") },
         { 0,                            XF86XK_AudioMute,         spawn,          SHCMD("playerctl pause") },
+        { MODKEY|ControlMask,           XK_l,                     spawn,          SHCMD("/usr/local/bin/slock") },
 };
 
 /* button definitions */
