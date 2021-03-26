@@ -26,10 +26,12 @@ static const char *colors[][3]      = {
         [SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
         [SchemeSel]  = { col_gray4, col_cyan,  col_cyan  },
 };
-static const unsigned int gappx     = 3;
+static const unsigned int gappx     = 5;
 
 /* tagging */
 static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+
+static const char ncspotName[] = "ncspot";
 
 static const Rule rules[] = {
         /* xprop(1):
@@ -40,7 +42,7 @@ static const Rule rules[] = {
         /* class            instance    title       tags mask     isfloating   monitor */
 	{ "Google-chrome",  NULL,       NULL,       1,            0,            0 },
 	{ "Alacritty",      NULL,       "bpytop",   1 << 1,       0,            0 },
-	{ "Alacritty",      NULL,       "ncspot",   1 << 1,       0,           -1 },
+	{ "Alacritty",      NULL,       ncspotName, 1 << 1,       0,           -1 },
         { "Alacritty",      NULL,       NULL,       0,            0,           -1 },
         // { "Firefox",        NULL,       NULL,       1 << 8,       0,           -1 },
         // { "Gimp",     NULL,       NULL,       0,            1,           -1 },
@@ -60,6 +62,7 @@ static const Layout layouts[] = {
 
 /* key definitions */
 #define MODKEY Mod4Mask
+#define ALTKEY Mod1Mask
 #define TAGKEYS(KEY,TAG) \
         { MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
         { MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
@@ -83,6 +86,14 @@ static const char *scratchpadcmd[] = {
     NULL
 };
 
+static const char *ncspotCmd[] = {
+    "alacritty",
+    "-t",
+    ncspotName,
+    "-o", "font.size=14",
+    "-e", "/usr/bin/ncspot",
+    NULL
+};
 
 /* vol-ctrl script in https://github.com/nloyola/nlscripts */
 
@@ -140,6 +151,7 @@ static Key keys[] = {
         { MODKEY,                       XK_period,                focusmon,       {.i = +1 } },
         { MODKEY|ShiftMask,             XK_comma,                 tagmon,         {.i = -1 } },
         { MODKEY|ShiftMask,             XK_period,                tagmon,         {.i = +1 } },
+        { MODKEY,                       XK_w,                     spawn,          SHCMD("auto-wall") },
         TAGKEYS(                        XK_1,                     0)
         TAGKEYS(                        XK_2,                     1)
         TAGKEYS(                        XK_3,                     2)
@@ -159,6 +171,7 @@ static Key keys[] = {
         { 0,                            XF86XK_AudioStop,         spawn,          SHCMD("playerctl stop") },
         { 0,                            XF86XK_AudioMute,         spawn,          SHCMD("playerctl pause") },
         { MODKEY|ControlMask,           XK_l,                     spawn,          SHCMD("/usr/local/bin/slock") },
+        { MODKEY|ALTKEY,                XK_s,                     spawn,          {.v = ncspotCmd } },
 };
 
 /* button definitions */
