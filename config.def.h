@@ -21,10 +21,25 @@ static const char col_gray2[]       = "#444444";
 static const char col_gray3[]       = "#bbbbbb";
 static const char col_gray4[]       = "#eeeeee";
 static const char col_cyan[]        = "#005577";
+static const char col_black[]       = "#000000";
+static const char col_red[]         = "#ff0000";
+static const char col_yellow[]      = "#ffff00";
+static const char col_white[]       = "#ffffff";
+
 static const char *colors[][3]      = {
         /*               fg         bg         border   */
-        [SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
-        [SchemeSel]  = { col_gray4, col_cyan,  col_cyan  },
+    [SchemeNorm] =   { col_gray3, col_gray1,  col_gray2 },  // 
+    [SchemeSel]  =   { col_gray4, col_cyan,   col_cyan },   // 
+    [SchemeWarn] =   { col_black, col_yellow, col_red },    // 
+    [SchemeUrgent]=  { col_white, col_red,    col_red },    // 
+    [SchemeUser1 ]=  { "#5fafd7", col_gray1,  col_gray2 },  // 
+    [SchemeUser2 ]=  { "#5faf5f", col_gray1,  col_gray2 },  // 
+    [SchemeUser3 ]=  { "#afd700", col_gray1,  col_gray2 },  // 
+    [SchemeUser4 ]=  { "#af87d7", col_gray1,  col_gray2 },  // 
+    [SchemeUser5 ]=  { "#ffaf00", col_gray1,  col_gray2 },  // 
+    [SchemeUser6 ]=  { "#ff5faf", col_gray1,  col_gray2 },  // 
+    [SchemeUser7 ]=  { "#00afaf", col_gray1,  col_gray2 },  // 
+    [SchemeUser8 ]=  { "#5f8787", col_gray1,  col_gray2 },  // 
 };
 static const unsigned int gappx     = 5;
 
@@ -44,8 +59,8 @@ static const Rule rules[] = {
         { "Deluge-gtk",     NULL,       "Deluge",   1 << 2,       0,            0 },
 	{ "Alacritty",      NULL,       ncspotName, 1 << 1,       0,           -1 },
         { "Alacritty",      NULL,       NULL,       0,            0,           -1 },
-        // { "Firefox",        NULL,       NULL,       1 << 8,       0,           -1 },
-        // { "Gimp",     NULL,       NULL,       0,            1,           -1 },
+        // { "Firefox",     NULL,       NULL,       1 << 8,       0,           -1 },
+        // { "Gimp",        NULL,       NULL,       0,            1,           -1 },
 };
 
 /* layout(s) */

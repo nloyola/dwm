@@ -59,7 +59,9 @@
 
 /* enums */
 enum { CurNormal, CurResize, CurMove, CurLast }; /* cursor */
-enum { SchemeNorm, SchemeSel }; /* color schemes */
+enum { SchemeNorm, SchemeSel, SchemeWarn, SchemeUrgent,
+       SchemeUser1, SchemeUser2, SchemeUser3, SchemeUser4,
+       SchemeUser5, SchemeUser6, SchemeUser7, SchemeUser8 }; /* color schemes */
 enum { NetSupported, NetWMName, NetWMState, NetWMCheck,
        NetWMFullscreen, NetActiveWindow, NetWMWindowType,
        NetWMWindowTypeDialog, NetClientList, NetLast }; /* EWMH atoms */
@@ -294,6 +296,12 @@ static unsigned int scratchtag = 1 << LENGTH(tags);
 /* compile-time check if all tags fit into an unsigned int bit array. */
 struct NumTags { char limitexceeded[LENGTH(tags) > 31 ? -1 : 1]; };
 
+//#define DEBUG 1
+
+#if DEBUG
+FILE *logger = NULL;
+#endif
+
 /* function implementations */
 void
 applyrules(Client *c)
@@ -467,7 +475,7 @@ buttonpress(XEvent *e)
 			char ch;
 			dwmblockssig = 0;
 			while (text[++i]) {
-				if ((unsigned char)text[i] < ' ') {
+				if ((unsigned char)text[i] <= 16) {
 					ch = text[i];
 					text[i] = '\0';
 					x += TEXTW(text) - lrpad;
@@ -670,7 +678,7 @@ copyvalidchars(char *text, char *rawtext)
 	int i = -1, j = 0;
 
 	while(rawtext[++i]) {
-		if ((unsigned char)rawtext[i] >= ' ') {
+		if ((unsigned char)rawtext[i] >= '') {
 			text[j++] = rawtext[i];
 		}
 	}
@@ -753,13 +761,37 @@ drawbar(Monitor *m)
 	int boxs = drw->fonts->h / 9;
 	int boxw = drw->fonts->h / 6 + 2;
 	unsigned int i, occ = 0, urg = 0;
+        char *ts = stext;
+        char *tp = stext;
+        int tx = 0;
+        char ctmp;
 	Client *c;
 
 	/* draw status first so it can be overdrawn by tags later */
 	if (m == selmon || 1) { /* status is only drawn on selected monitor */
 		drw_setscheme(drw, scheme[SchemeNorm]);
 		tw = TEXTW(stext) - lrpad + 2; /* 2px right padding */
-		drw_text(drw, m->ww - tw, 0, tw, bh, 0, stext, 0);
+		while (1) {
+                        /* if ((unsigned int)*ts > LENGTH(colors)) { ts++; continue ; } */
+                        if ((unsigned int)*ts >= 32) { ts++; continue ; }
+			ctmp = *ts;
+
+                        #if DEBUG
+                        fprintf(logger, "ctmp: %d\n", (unsigned int) ctmp);
+                        #endif
+
+			*ts = '\0';
+			drw_text(drw, m->ww - tw + tx, 0, tw - tx, bh, 0, tp, 0);
+			tx += TEXTW(tp) -lrpad;
+			if (ctmp == '\0') { break; }
+                        if (ctmp > 16 && ctmp < 32) {
+                            /* only assign color if the code is between 17 and 31 */
+                            /* the color selected ill be the code minus 17 */
+                            drw_setscheme(drw, scheme[(unsigned int)(ctmp-17)]);
+                        }
+			*ts = ctmp;
+			tp = ++ts;
+		}
 	}
 
 	for (c = m->clients; c; c = c->next) {
@@ -2328,6 +2360,12 @@ zoom(const Arg *arg)
 int
 main(int argc, char *argv[])
 {
+    #if DEBUG
+    if (!(logger = fopen("/tmp/dwm.log", "w"))) {
+        die("dwm: could not open log file");
+    }
+    #endif
+
 	if (argc == 2 && !strcmp("-v", argv[1]))
 		die("dwm-"VERSION);
 	else if (argc != 1)
