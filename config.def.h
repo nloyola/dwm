@@ -41,7 +41,7 @@ static const Rule rules[] = {
         /* ORDER MATTERS */
         /* class            instance    title       tags mask     isfloating   monitor */
 	{ "Google-chrome",  NULL,       NULL,       1,            0,            0 },
-	{ "Alacritty",      NULL,       "bpytop",   1 << 1,       0,            0 },
+        { "Deluge-gtk",     NULL,       "Deluge",   1 << 2,       0,            0 },
 	{ "Alacritty",      NULL,       ncspotName, 1 << 1,       0,           -1 },
         { "Alacritty",      NULL,       NULL,       0,            0,           -1 },
         // { "Firefox",        NULL,       NULL,       1 << 8,       0,           -1 },
